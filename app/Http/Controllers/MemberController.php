@@ -25,7 +25,7 @@ class MemberController extends Controller
      */
     public function create()
     {
-        //
+        return view('members.create');
     }
 
     /**
@@ -36,7 +36,20 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $data = $request->all();
+      $member = new Member;
+      $member->name = $data['name'];
+      $member->phone = $data['phone'];
+      $member->joinDate = $data['joinDate'];
+      $member->coach = $data['coach'];
+      $member->team = $data['team'];
+      $member->gender = $data['gender'];
+      $savedData = $member->save();
+
+      if ($savedData) {
+        return redirect()->route('members.index');
+      }
+
     }
 
     /**
