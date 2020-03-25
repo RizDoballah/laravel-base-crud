@@ -57,7 +57,6 @@ class MemberController extends Controller
       if ($savedData) {
         return redirect()->route('members.show', compact('member'));
       }
-
     }
 
     /**
@@ -92,9 +91,12 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Member $member)
     {
-        //
+        if (empty($member)) {
+          abort('404');
+        }
+        return view('members.create', compact('member'));
     }
 
     /**
@@ -104,9 +106,22 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, $id)
     {
-        //
+        $member = Member::find($id);
+        if (empty($member)) {
+          abort('404');
+        }
+        $data = $request->all();
+        $updated = $member->update($data);
+
+        if ($updated) {
+          $member = Member::find($id);
+
+          return redirect()->route('members.show', compact('member'));
+
+        }
     }
 
     /**
