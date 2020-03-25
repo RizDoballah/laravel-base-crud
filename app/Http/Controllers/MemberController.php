@@ -15,7 +15,9 @@ class MemberController extends Controller
     public function index()
     {
       $member = Member::all();
+
       dd($member);
+      return view('members.index');
     }
 
     /**
@@ -37,17 +39,23 @@ class MemberController extends Controller
     public function store(Request $request)
     {
       $data = $request->all();
-      $member = new Member;
-      $member->name = $data['name'];
-      $member->phone = $data['phone'];
-      $member->joinDate = $data['joinDate'];
-      $member->coach = $data['coach'];
-      $member->team = $data['team'];
-      $member->gender = $data['gender'];
-      $savedData = $member->save();
+
+      $newMember = new Member;
+      // $member->name = $data['name'];
+      // $member->phone = $data['phone'];
+      // $member->joinDate = $data['joinDate'];
+      // $member->coach = $data['coach'];
+      // $member->team = $data['team'];
+      // $member->gender = $data['gender'];
+
+      $newMember->fill($data);
+
+      $savedData = $newMember->save();
+
+      $member = Member::orderBy('id', 'desc')->first();
 
       if ($savedData) {
-        return redirect()->route('members.index');
+        return redirect()->route('members.show', compact('member'));
       }
 
     }
@@ -58,9 +66,24 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    // public function show($id)
+    // {
+    //   $member = Member::find($id);
+    //
+    //   if(empty($member)) {
+    //     abort('404');
+    //   }
+    //
+    //   return view('members.show', compact('member'));
+    // }
+
+    public function show(Member $member)
     {
-        //
+      if(empty($member)) {
+        abort('404');
+      }
+
+      return view('members.show', compact('member'));
     }
 
     /**

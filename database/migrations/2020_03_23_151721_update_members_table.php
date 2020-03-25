@@ -14,7 +14,7 @@ class UpdateMembersTable extends Migration
     public function up()
     {
       Schema::table('members', function (Blueprint $table) {
-        $table->string('joinDate')->change();
+        $table->dateTime('joinDate')->default(DB::raw('CURRENT_TIMESTAMP'))->onUpdate(DB::raw('CURRENT_TIMESTAMP'))->change();
       });
     }
 
