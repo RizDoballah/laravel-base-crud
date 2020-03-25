@@ -16,8 +16,7 @@ class MemberController extends Controller
     {
       $member = Member::all();
 
-      dd($member);
-      return view('members.index');
+      return view('members.index', compact('member'));
     }
 
     /**
@@ -130,8 +129,17 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Member $member)
     {
-        //
+      $id = $member->id;
+      $deleted = $member->delete();
+
+      $data = [
+        'id' =>$id,
+        'member' => Member::all()
+      ];
+
+      return view('members.index', $data);
+
     }
 }
